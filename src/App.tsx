@@ -1,13 +1,6 @@
 import React, { useState, useEffect, FormEvent } from 'react';
 import axios from 'axios';
 
-// TODO handle error when not fetching prospects
-// TODO total loan can only be positive
-// TODO interest can only be positive
-// TODO years can only be positive
-// TODO "Prospect added successfully!" message should disappear after a few seconds
-// TODO H1, H2 and footer
-
 interface Prospect {
   id?: number;
   customerName: string;
@@ -15,6 +8,8 @@ interface Prospect {
   years: number;
   monthlyPayment?: number;
 }
+
+const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
 const App: React.FC = () => {
   const [prospects, setProspects] = useState<Prospect[]>([]);
@@ -27,7 +22,7 @@ const App: React.FC = () => {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    axios.get<Prospect[]>('http://localhost:8080/prospects')
+    axios.get<Prospect[]>(`${BASE_URL}/prospects`)
       .then(response => {
         setProspects(response.data);
       })
@@ -50,10 +45,10 @@ const App: React.FC = () => {
       years: parseInt(formData.years, 10)
     };
 
-    axios.post('http://localhost:8080/prospects', newProspect)
+    axios.post(`${BASE_URL}/prospects`, newProspect)
       .then(() => {
         setMessage('Prospect added successfully!');
-        return axios.get<Prospect[]>('http://localhost:8080/prospects');
+        return axios.get<Prospect[]>(`${BASE_URL}/prospects`);
       })
       .then(response => {
         setProspects(response.data);
