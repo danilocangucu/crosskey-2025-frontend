@@ -1,6 +1,17 @@
 import React, { useState, useEffect, FormEvent } from 'react';
 import axios from 'axios';
 
+// TODO handle error when not fetching prospects
+// TODO total loan can only be positive
+// TODO interest can only be positive
+// TODO years can only be positive
+// TODO "Prospect added successfully!" message should disappear after a few seconds
+// TODO H1, H2 and footer
+// TODO add a "loading" message when fetching prospects
+// TODO add a "loading" message when posting a prospect
+// TODO add Utopia to the project
+// TODO edit page title and favicon
+
 interface Prospect {
   id?: number;
   customerName: string;
