@@ -1,54 +1,71 @@
-# React + TypeScript + Vite
+## Frontend Implementation
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The frontend is built with React and TypeScript and uses axios for communicating with the backend API. 
 
-Currently, two official plugins are available:
+### Running the Frontend
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Before running the frontend, make sure you have [Node.js and npm](https://nodejs.org/) installed. Then, install the project dependencies by running:
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+The project uses Vite as the build tool. Visit the [frontend repository](https://github.com/danilocangucu/crosskey-2025-frontend) to get its code. Here are the key npm scripts:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- **Development:**  
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+  ```bash
+  npm run dev
+  ```
+  Starts the Vite development server.
+  
+- **Build:**  
+
+  ```bash
+  npm run build
+  ```
+  Compiles the TypeScript code and bundles the application.
+
+- **Preview:**  
+
+  ```bash
+  npm run preview
+  ```
+  Previews the production build locally.
+  
+When running dev and preview, the port is automatically assigned (usually 5173, but check the Vite logs to be sure).
+
+  
+### Docker Setup for Frontend
+
+A Dockerfile is already configured in the application. You can either build the image locally or pull it from Docker Hub.
+
+#### Build the Docker Image Locally
+
+Run the following command in the project root:
+
+```bash
+docker build -t danilo-crosskey-frontend-2025 .
 ```
+
+Then start the container with:
+
+```bash
+docker run --rm danilo-crosskey-frontend-2025
+```
+
+#### Pulling and Running the Image from Docker Hub
+
+Alternatively, you can pull the pre-built image from Docker Hub:
+
+```bash
+docker pull danilocangucu/danilo-crosskey-frontend-2025:latest
+```
+
+After pulling, run the container with the following command, which maps port 3000 in the container to port 5000 on your host:
+
+```bash
+docker run --rm -p 5000:3000 danilocangucu/danilo-crosskey-frontend-2025:latest
+```
+
+This mapping is needed because the app uses `serve` as its static file server on port 3000, and I usually use port 5000 for frontends.
