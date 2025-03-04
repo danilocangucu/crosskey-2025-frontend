@@ -11,12 +11,17 @@ const App: React.FC = () => {
   const [prospects, setProspects] = useState<Prospect[]>([]);
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [fetchError, setFetchError] = useState('');
 
   const fetchProspects = () => {
     setIsLoading(true);
+    setFetchError('');
     getProspects()
       .then(data => setProspects(data))
-      .catch(err => console.error('Error fetching prospects:', err))
+      .catch(err => {
+        console.error('Error fetching prospects:', err);
+        setFetchError('Unable to fetch prospects. Please try again later.');
+      })
       .finally(() => setIsLoading(false));
   };
 
@@ -25,7 +30,6 @@ const App: React.FC = () => {
   }, []);
 
   const handleFormSuccess = () => {
-    // Refresh the list after a successful add
     fetchProspects();
   };
 
@@ -35,6 +39,7 @@ const App: React.FC = () => {
       <div className="moneybin-container">
         <section className="moneybin-card">
           <h2>Prospects</h2>
+          {fetchError && <p className="moneybin-error">{fetchError}</p>}
           <ProspectList prospects={prospects} isLoading={isLoading} />
         </section>
 
