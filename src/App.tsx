@@ -1,152 +1,51 @@
-import React, { useState, useEffect, FormEvent } from 'react';
-import axios from 'axios';
-
-// TODO handle error when not fetching prospects
-// TODO total loan can only be positive
-// TODO interest can only be positive
-// TODO years can only be positive
-// TODO "Prospect added successfully!" message should disappear after a few seconds
-// TODO H1, H2 and footer
-// TODO add a "loading" message when fetching prospects
-// TODO add a "loading" message when posting a prospect
-// TODO add Utopia to the project
-// TODO edit page title and favicon
-
-interface Prospect {
-  id?: number;
-  customerName: string;
-  totalLoan: number;
-  years: number;
-  monthlyPayment?: number;
-}
-
-const BASE_URL = import.meta.env.VITE_BACKEND_URL;
+import React, { useState, useEffect } from 'react';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import ProspectList from './components/ProspectList';
+import ProspectForm from './components/ProspectForm';
+import { getProspects } from './services/prospectService';
+import { Prospect } from './types/Prospect';
+import './moneyBin.css';
 
 const App: React.FC = () => {
   const [prospects, setProspects] = useState<Prospect[]>([]);
-  const [formData, setFormData] = useState({
-    customerName: '',
-    totalLoan: '',
-    interest: '',
-    years: ''
-  });
   const [message, setMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    axios.get<Prospect[]>(`${BASE_URL}/prospects`)
-      .then(response => {
-        setProspects(response.data);
-      })
-      .catch(err => {
-        console.error('Error fetching prospects:', err);
-      });
-  }, []);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const fetchProspects = () => {
+    setIsLoading(true);
+    getProspects()
+      .then(data => setProspects(data))
+      .catch(err => console.error('Error fetching prospects:', err))
+      .finally(() => setIsLoading(false));
   };
 
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
+  useEffect(() => {
+    fetchProspects();
+  }, []);
 
-    const newProspect = {
-      customerName: formData.customerName,
-      totalLoan: parseFloat(formData.totalLoan),
-      interest: parseFloat(formData.interest),
-      years: parseInt(formData.years, 10)
-    };
-
-    axios.post(`${BASE_URL}/prospects`, newProspect)
-      .then(() => {
-        setMessage('Prospect added successfully!');
-        return axios.get<Prospect[]>(`${BASE_URL}/prospects`);
-      })
-      .then(response => {
-        setProspects(response.data);
-      })
-      .catch(err => {
-        console.error('Error posting prospect:', err);
-        setMessage('Error posting prospect.');
-      });
-
-    setFormData({
-      customerName: '',
-      totalLoan: '',
-      interest: '',
-      years: ''
-    });
+  const handleFormSuccess = () => {
+    // Refresh the list after a successful add
+    fetchProspects();
   };
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h2>========== Prospects ==========</h2>
-      <div style={{ whiteSpace: 'pre-wrap', fontFamily: 'monospace' }}>
-        {prospects.map((prospect, index) => (
-          <div key={prospect.id || index}>
-            {`Prospect ${index + 1}: ${prospect.customerName} wants to borrow ${prospect.totalLoan.toFixed(2)} € for a period of ${prospect.years} years and pay ${prospect.monthlyPayment?.toFixed(2)} € each month`}
-          </div>
-        ))}
+    <>
+      <Header />
+      <div className="moneybin-container">
+        <section className="moneybin-card">
+          <h2>Prospects</h2>
+          <ProspectList prospects={prospects} isLoading={isLoading} />
+        </section>
+
+        <section className="moneybin-card">
+          <h2>Add a New Prospect</h2>
+          {message && <p className="moneybin-success">{message}</p>}
+          <ProspectForm onSuccess={handleFormSuccess} setMessage={setMessage} />
+        </section>
       </div>
-      <h2>===============================</h2>
-
-      <hr />
-
-      <h3>Add a New Prospect (POST)</h3>
-      {message && <p>{message}</p>}
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>
-            Customer Name:
-            <input
-              type="text"
-              name="customerName"
-              value={formData.customerName}
-              onChange={handleInputChange}
-              required
-            />
-          </label>
-        </div>
-        <div>
-          <label>
-            Total Loan:
-            <input
-              type="number"
-              step="0.01"
-              name="totalLoan"
-              value={formData.totalLoan}
-              onChange={handleInputChange}
-              required
-            />
-          </label>
-        </div>
-        <div>
-          <label>
-            Interest:
-            <input
-              type="number"
-              step="0.01"
-              name="interest"
-              value={formData.interest}
-              onChange={handleInputChange}
-              required
-            />
-          </label>
-        </div>
-        <div>
-          <label>
-            Years:
-            <input
-              type="number"
-              name="years"
-              value={formData.years}
-              onChange={handleInputChange}
-              required
-            />
-          </label>
-        </div>
-        <button type="submit">Add Prospect</button>
-      </form>
-    </div>
+      <Footer />
+    </>
   );
 };
 

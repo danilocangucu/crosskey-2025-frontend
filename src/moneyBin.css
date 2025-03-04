@@ -1,0 +1,148 @@
+@keyframes floaty-money {
+    0% {
+      background-position: 0 0;
+    }
+    100% {
+      background-position: 200px 200px;
+    }
+}  
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Rubik', sans-serif;
+    color: #3e2723;
+}
+
+body::before {
+    content: "";
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+    background:
+    linear-gradient(rgba(254,245,212, 0.8), rgba(254,245,212, 0.8)),
+    url('/moneybin.webp') repeat;
+    background-size: 60px 60px;
+    background-position: 0 0;
+    opacity: 1;
+    animation: floaty-money 150s linear infinite alternate;
+}
+  
+  
+.moneybin-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 1.5rem;
+}
+  
+.moneybin-card {
+    background-color: #ffffffee;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+  
+.moneybin-card h2 {
+    margin-top: 0;
+    font-weight: 600;
+}
+  
+.moneybin-header {
+    background-color: #fdd835;
+    padding: 1.5rem 0.5rem;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+}
+
+.moneybin-header h1 {
+    margin: 0;
+    font-size: 2rem;
+    color: #3e2723;
+}
+
+.moneybin-quote {
+    font-style: italic;
+    margin-top: 0.25rem;
+}
+  
+.moneybin-footer {
+    background-color: #fdd835;
+    color: #3e2723;
+    text-align: center;
+    padding: 0.75rem 0;
+    margin-top: 2rem;
+    box-shadow: 0 -2px 4px rgba(0,0,0,0.15);
+}
+  
+.moneybin-error {
+    color: #d32f2f;
+}
+
+.moneybin-success {
+    color: #388e3c;
+}
+  
+input[type="text"],
+input[type="number"] {
+    width: 100%;
+    max-width: 300px;
+    padding: 0.5rem;
+    margin-top: 0.25rem;
+    margin-bottom: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-family: inherit;
+}
+  
+button {
+    cursor: pointer;
+    background-color: #fdd835;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    padding: 0.6em 1.2em;
+    font-weight: 600;
+    transition: background-color 0.25s;
+}
+  
+button:hover {
+    background-color: #fbc02d;
+}
+  
+.moneybin-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-height: 300px;
+    overflow-y: scroll;
+}
+  
+.moneybin-list-item {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 0.25rem;
+    padding-left: 0.5rem;
+    padding-top: 0.25rem;
+    padding-right: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+  
+.moneybin-list-header {
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+    color: #3e2723;
+}
+  
+.moneybin-list-body {
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+  
+.moneybin-list-body strong {
+    font-weight: 600;
+}
